@@ -104,8 +104,19 @@ def main():
    print('input mins:({},{}), maxs:({},{})'.format(np.amin(raw[:,0]),np.amin(raw[:,1]),
                                                    np.amax(raw[:,0]),np.amax(raw[:,1])))
 
+   # Since most audio files will have highly-correlated left and right,
+   # apply a slow rotation to the audio
+   # This will have the effect of panning the audio back and forth
+   f_rot_hz = 5
+   raw_spin = np.zeros(raw.shape)
+   for i in range(0,raw.shape[0]):
+      t=2*np.pi*f_rot_hz*(i/fs_hz)
+      rm = np.array([[np.cos(t),-np.sin(t)],
+                     [np.sin(t), np.cos(t)]])
+      raw_spin[i,:] = np.matmul(rm,(raw[i,:]))
+
    # Distort the waveform
-   distorted = MapValuesToClosestValid(line_segments,raw)
+   distorted = MapValuesToClosestValid(line_segments,raw_spin)
    print('output mins:({},{}), maxs:({},{})'.format(np.amin(distorted[:,0]),np.amin(distorted[:,1]),
                                                     np.amax(distorted[:,0]),np.amax(distorted[:,1])))
 
