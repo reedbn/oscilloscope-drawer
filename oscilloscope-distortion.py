@@ -57,6 +57,38 @@ class LineSegment:
 
       return cp
 
+class BoundingBox:
+   def __init__(self,tl,br):
+      # Box is defined by the top-left and bottom-right corners
+      self.tl = tl
+      self.br = br
+
+      # Define the lines as well, since we'll need to snap to them
+      self.top    = LineSegment(tl,np.array([br[0],tl[1]]))
+      self.bottom = LineSegment(br,np.array([tl[0],br[1]]))
+      self.left   = LineSegment(tl,np.array([tl[0],br[1]]))
+      self.right  = LineSegment(br,np.array([br[0],tl[1]]))
+
+   def ClosestPoint(self,p):
+      if self.tl[0] <= p[0]:
+         if p[0] <= self.br[0]:
+            if self.br[1] <= p[1]:
+               if p[1] <= self.tl[1]:
+                  # point p is inside our box
+                  return p
+               else:
+                  # point p is above our top edge
+                  return self.top.ClosestPoint(p)
+            else:
+               # point p is below our bottom edge
+               return self.bottom.ClosestPoint(p)
+         else:
+            # point p is right of our right edge
+            return self.right.ClosestPoint(p)
+      else:
+         # point p is left of our left edge
+         return self.left.ClosestPoint(p)
+
 def MapValuesToClosestValid(line_segments,input_vals):
    # Assumes input_vals is a nx2 array
    output_vals = np.zeros(input_vals.shape)
@@ -81,12 +113,39 @@ def main():
    #exit(1)
 
    # Set up the line segments we'll be mapping our waveform onto
-   shift = 0.6
-   scale = 0.1
-   segK1 = LineSegment(np.array([(-1.0+shift)*scale,-1.0*scale]),np.array([(-1.0+shift)*scale, 1.0*scale]))
-   segK2 = LineSegment(np.array([(-1.0+shift)*scale, 0.0*scale]),np.array([( 1.0+shift)*scale, 1.0*scale]))
-   segK3 = LineSegment(np.array([(-1.0+shift)*scale, 0.0*scale]),np.array([( 1.0+shift)*scale,-1.0*scale]))
-   line_segments = [segK1,segK2,segK3]
+   #shift = 0.6
+   #scale = 0.1
+   #segK1 = LineSegment(np.array([(-1.0+shift)*scale,-1.0*scale]),np.array([(-1.0+shift)*scale, 1.0*scale]))
+   #segK2 = LineSegment(np.array([(-1.0+shift)*scale, 0.0*scale]),np.array([( 1.0+shift)*scale, 1.0*scale]))
+   #segK3 = LineSegment(np.array([(-1.0+shift)*scale, 0.0*scale]),np.array([( 1.0+shift)*scale,-1.0*scale]))
+   #line_segments = [segK1,segK2,segK3]
+#
+   #line_segments = []
+   #for scale in np.linspace(0.1, 1, num=9):
+   #   segS1 = LineSegment(np.array([-1.0*scale,-1.0*scale]),np.array([-1.0*scale, 1.0*scale]))
+   #   segS2 = LineSegment(np.array([-1.0*scale, 1.0*scale]),np.array([ 1.0*scale, 1.0*scale]))
+   #   segS3 = LineSegment(np.array([ 1.0*scale, 1.0*scale]),np.array([ 1.0*scale,-1.0*scale]))
+   #   segS4 = LineSegment(np.array([ 1.0*scale,-1.0*scale]),np.array([-1.0*scale,-1.0*scale]))
+   #   line_segments.append(segS1)
+   #   line_segments.append(segS2)
+   #   line_segments.append(segS3)
+   #   line_segments.append(segS4)
+
+   unit = 1/15
+   b01 = BoundingBox(np.array([-6.5*unit, 6.5*unit]),np.array([ 6.5*unit, 5.5*unit]))
+   b02 = BoundingBox(np.array([-6.5*unit, 6.5*unit]),np.array([-5.5*unit,-0.5*unit]))
+   b03 = BoundingBox(np.array([-6.5*unit, 0.5*unit]),np.array([ 6.5*unit,-0.5*unit]))
+   b04 = BoundingBox(np.array([ 5.5*unit, 0.5*unit]),np.array([ 6.5*unit,-5.5*unit]))
+   b05 = BoundingBox(np.array([-6.5*unit,-5.5*unit]),np.array([ 6.5*unit,-6.5*unit]))
+
+   b06 = BoundingBox(np.array([-4.5*unit, 4.5*unit]),np.array([ 6.5*unit, 3.5*unit]))
+   b07 = BoundingBox(np.array([-4.5*unit, 4.5*unit]),np.array([-3.5*unit, 1.5*unit]))
+   b08 = BoundingBox(np.array([-4.5*unit, 2.5*unit]),np.array([ 6.5*unit, 1.5*unit]))
+
+   b09 = BoundingBox(np.array([-6.5*unit,-1.5*unit]),np.array([ 4.5*unit,-2.5*unit]))
+   b10 = BoundingBox(np.array([ 3.5*unit,-1.5*unit]),np.array([ 4.5*unit,-4.5*unit]))
+   b11 = BoundingBox(np.array([-6.5*unit,-3.5*unit]),np.array([ 4.5*unit,-4.5*unit]))
+   line_segments = [b01,b02,b03,b04,b05,b06,b07,b08,b09,b10,b11]
 
    # Generate a random waveform
    fs_hz = 41000
@@ -96,10 +155,12 @@ def main():
    
    # Read in a real file
    fs_hz,data = wf.read('Bumy Goldson - Everyday Another Song.wav')
+   fs_hz,data = wf.read('Silva_Addict_VIP_Club.wav')
    raw = data.astype(np.double) / np.iinfo(np.int16).max
 
    # Only use the first 5 seconds
-   raw = raw[0:fs_hz*5,:]
+   #raw = raw[0:fs_hz*5,:]
+   raw = raw[int(fs_hz*(3*60+51.5)):fs_hz*(4*60+25)]
 
    print('input mins:({},{}), maxs:({},{})'.format(np.amin(raw[:,0]),np.amin(raw[:,1]),
                                                    np.amax(raw[:,0]),np.amax(raw[:,1])))
@@ -107,8 +168,8 @@ def main():
    # Since most audio files will have highly-correlated left and right,
    # apply a slow rotation to the audio
    # This will have the effect of panning the audio back and forth
-   f_rot_hz = 5
-   raw_spin = np.zeros(raw.shape)
+   f_rot_hz = 1
+   raw_spin = raw
    for i in range(0,raw.shape[0]):
       t=2*np.pi*f_rot_hz*(i/fs_hz)
       rm = np.array([[np.cos(t),-np.sin(t)],
