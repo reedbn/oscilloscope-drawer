@@ -147,6 +147,15 @@ def main():
    b11 = BoundingBox(np.array([-6.5*unit,-3.5*unit]),np.array([ 4.5*unit,-4.5*unit]))
    line_segments = [b01,b02,b03,b04,b05,b06,b07,b08,b09,b10,b11]
 
+   b12 = BoundingBox(np.array([-1.0     , 1.0     ]),np.array([-7.5*unit, -1.0    ]))
+   b13 = BoundingBox(np.array([-1.0     , 1.0     ]),np.array([ 1.0     , 7.5*unit]))
+   b14 = BoundingBox(np.array([-1.0     ,-7.5*unit]),np.array([ 1.0     ,-1.0     ]))
+   b15 = BoundingBox(np.array([ 7.5*unit, 1.0     ]),np.array([ 1.0     ,-1.0     ]))
+   line_segments.append(b12)
+   line_segments.append(b13)
+   line_segments.append(b14)
+   line_segments.append(b15)
+
    # Generate a random waveform
    fs_hz = 41000
    sl_s = 1
