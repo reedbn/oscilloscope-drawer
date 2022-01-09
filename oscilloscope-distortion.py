@@ -9,14 +9,14 @@ class LineSegment:
       # since we expect to use these values a lot,
       # precalculate them now
       self.vec = p2-p1
-      self.norm = np.linalg.norm(self.vec,2)
+      self.normsquared = np.linalg.norm(self.vec,2)**2
 
       # If p1 == p2, then our normalization by dividing
       # by self.norm will break stuff
       # But since we know vec is 0 in this case, we can
       # rely on that, and lie about what the norm is here
-      if(self.norm == 0):
-         self.norm = 1
+      if(self.normsquared == 0):
+         self.normsquared = 1
    
    def ClosestPoint(self,p):
       # We take the approach proposed by Joshua
@@ -32,7 +32,7 @@ class LineSegment:
       proj_p_len = np.dot(self.vec,p-self.p1)
 
       # Normalize this length to the length of the line segment
-      proj_p_norm_len = proj_p_len / self.norm
+      proj_p_norm_len = proj_p_len / self.normsquared
 
       # At this point, we have three cases to handle to find
       # what compare point we should use
@@ -73,25 +73,45 @@ def MapValuesToClosestValid(line_segments,input_vals):
    return output_vals
 
 def main():
+
+   #segTest = LineSegment(np.array([-1,-1]),np.array([1,1]))
+   #vals = np.array([[-1,-1],[0,0],[1,1],[1,0],[0,1],[-1,1],[1,-1]])
+   #distvals = MapValuesToClosestValid([segTest],vals)
+   #print(distvals)
+   #exit(1)
+
    # Set up the line segments we'll be mapping our waveform onto
-   segK1 = LineSegment(np.array([-1,-1]),np.array([-1,1]))
-   segK2 = LineSegment(np.array([-1,0.1]),np.array([1,1]))
-   segK3 = LineSegment(np.array([-0.9,0.2]),np.array([1,-1]))
+   shift = 0.6
+   scale = 0.1
+   segK1 = LineSegment(np.array([(-1.0+shift)*scale,-1.0*scale]),np.array([(-1.0+shift)*scale, 1.0*scale]))
+   segK2 = LineSegment(np.array([(-1.0+shift)*scale, 0.0*scale]),np.array([( 1.0+shift)*scale, 1.0*scale]))
+   segK3 = LineSegment(np.array([(-1.0+shift)*scale, 0.0*scale]),np.array([( 1.0+shift)*scale,-1.0*scale]))
    line_segments = [segK1,segK2,segK3]
-   #line_segments = [segK1]
 
    # Generate a random waveform
    fs_hz = 41000
    sl_s = 1
    rand_vals = np.random.rand(fs_hz*sl_s,2)
-   rand_scaled = (rand_vals - 0.5) * 2
+   raw = (rand_vals - 0.5) * 2
+   
+   # Read in a real file
+   fs_hz,data = wf.read('Bumy Goldson - Everyday Another Song.wav')
+   raw = data.astype(np.double) / np.iinfo(np.int16).max
+
+   # Only use the first 5 seconds
+   raw = raw[0:fs_hz*5,:]
+
+   print('input mins:({},{}), maxs:({},{})'.format(np.amin(raw[:,0]),np.amin(raw[:,1]),
+                                                   np.amax(raw[:,0]),np.amax(raw[:,1])))
 
    # Distort the waveform
-   rand_out = MapValuesToClosestValid(line_segments,rand_scaled)
+   distorted = MapValuesToClosestValid(line_segments,raw)
+   print('output mins:({},{}), maxs:({},{})'.format(np.amin(distorted[:,0]),np.amin(distorted[:,1]),
+                                                    np.amax(distorted[:,0]),np.amax(distorted[:,1])))
 
    # Save out the stuff
-   audio_in = (rand_scaled * np.iinfo(np.int16).max).astype(np.int16)
-   audio_out = (rand_out * np.iinfo(np.int16).max).astype(np.int16)
+   audio_in = (raw * np.iinfo(np.int16).max).astype(np.int16)
+   audio_out = (distorted * np.iinfo(np.int16).max).astype(np.int16)
    wf.write('ai.wav',fs_hz,audio_in)
    wf.write('ao.wav',fs_hz,audio_out)
 
