@@ -101,6 +101,8 @@ def MapValuesToClosestValid(line_segments,input_vals):
          if(d < ad):
             ad = d
             output_vals[i,:] = cp
+            if(0 == d):
+               break
       #print('closest point point to ({}) is ({})'.format(p,cp))
    return output_vals
 
@@ -131,7 +133,7 @@ def main():
    #   line_segments.append(segS3)
    #   line_segments.append(segS4)
 
-   unit = 1/15
+   unit = 0.5/15
    b01 = BoundingBox(np.array([-6.5*unit, 6.5*unit]),np.array([ 6.5*unit, 5.5*unit]))
    b02 = BoundingBox(np.array([-6.5*unit, 6.5*unit]),np.array([-5.5*unit,-0.5*unit]))
    b03 = BoundingBox(np.array([-6.5*unit, 0.5*unit]),np.array([ 6.5*unit,-0.5*unit]))
@@ -169,7 +171,7 @@ def main():
 
    # Only use the first 5 seconds
    #raw = raw[0:fs_hz*5,:]
-   raw = raw[int(fs_hz*(3*60+51.5)):fs_hz*(4*60+25)]
+   #raw = raw[int(fs_hz*(3*60+51.5)):fs_hz*(4*60+25)]
 
    print('input mins:({},{}), maxs:({},{})'.format(np.amin(raw[:,0]),np.amin(raw[:,1]),
                                                    np.amax(raw[:,0]),np.amax(raw[:,1])))
