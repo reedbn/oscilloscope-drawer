@@ -1,3 +1,4 @@
+import matplotlib.pyplot as plt
 import numpy as np
 import scipy.io.wavfile as wf
 
@@ -106,6 +107,13 @@ def MapValuesToClosestValid(line_segments,input_vals):
       #print('closest point point to ({}) is ({})'.format(p,cp))
    return output_vals
 
+def PlotRenderPreview(line_segments,resolution):
+   invals = np.mgrid[-1:1+resolution:resolution, -1:1+resolution:resolution].reshape(2,-1).T
+   closevals = MapValuesToClosestValid(line_segments,invals)
+   plt.plot(closevals[:,0],closevals[:,1],'b.')
+   plt.show()
+   
+
 def main():
 
    #segTest = LineSegment(np.array([-1,-1]),np.array([1,1]))
@@ -133,30 +141,179 @@ def main():
    #   line_segments.append(segS3)
    #   line_segments.append(segS4)
 
-   unit = 0.5/15
-   b01 = BoundingBox(np.array([-6.5*unit, 6.5*unit]),np.array([ 6.5*unit, 5.5*unit]))
-   b02 = BoundingBox(np.array([-6.5*unit, 6.5*unit]),np.array([-5.5*unit,-0.5*unit]))
-   b03 = BoundingBox(np.array([-6.5*unit, 0.5*unit]),np.array([ 6.5*unit,-0.5*unit]))
-   b04 = BoundingBox(np.array([ 5.5*unit, 0.5*unit]),np.array([ 6.5*unit,-5.5*unit]))
-   b05 = BoundingBox(np.array([-6.5*unit,-5.5*unit]),np.array([ 6.5*unit,-6.5*unit]))
+   #unit = 0.5/15
+   #b01 = BoundingBox(np.array([-6.5*unit, 6.5*unit]),np.array([ 6.5*unit, 5.5*unit]))
+   #b02 = BoundingBox(np.array([-6.5*unit, 6.5*unit]),np.array([-5.5*unit,-0.5*unit]))
+   #b03 = BoundingBox(np.array([-6.5*unit, 0.5*unit]),np.array([ 6.5*unit,-0.5*unit]))
+   #b04 = BoundingBox(np.array([ 5.5*unit, 0.5*unit]),np.array([ 6.5*unit,-5.5*unit]))
+   #b05 = BoundingBox(np.array([-6.5*unit,-5.5*unit]),np.array([ 6.5*unit,-6.5*unit]))
+   #
+   #b06 = BoundingBox(np.array([-4.5*unit, 4.5*unit]),np.array([ 6.5*unit, 3.5*unit]))
+   #b07 = BoundingBox(np.array([-4.5*unit, 4.5*unit]),np.array([-3.5*unit, 1.5*unit]))
+   #b08 = BoundingBox(np.array([-4.5*unit, 2.5*unit]),np.array([ 6.5*unit, 1.5*unit]))
+   #
+   #b09 = BoundingBox(np.array([-6.5*unit,-1.5*unit]),np.array([ 4.5*unit,-2.5*unit]))
+   #b10 = BoundingBox(np.array([ 3.5*unit,-1.5*unit]),np.array([ 4.5*unit,-4.5*unit]))
+   #b11 = BoundingBox(np.array([-6.5*unit,-3.5*unit]),np.array([ 4.5*unit,-4.5*unit]))
+   #line_segments = [b01,b02,b03,b04,b05,b06,b07,b08,b09,b10,b11]
+   #
+   #b12 = BoundingBox(np.array([-1.0     , 1.0     ]),np.array([-7.5*unit, -1.0    ]))
+   #b13 = BoundingBox(np.array([-1.0     , 1.0     ]),np.array([ 1.0     , 7.5*unit]))
+   #b14 = BoundingBox(np.array([-1.0     ,-7.5*unit]),np.array([ 1.0     ,-1.0     ]))
+   #b15 = BoundingBox(np.array([ 7.5*unit, 1.0     ]),np.array([ 1.0     ,-1.0     ]))
+   #line_segments.append(b12)
+   #line_segments.append(b13)
+   #line_segments.append(b14)
+   #line_segments.append(b15)
 
-   b06 = BoundingBox(np.array([-4.5*unit, 4.5*unit]),np.array([ 6.5*unit, 3.5*unit]))
-   b07 = BoundingBox(np.array([-4.5*unit, 4.5*unit]),np.array([-3.5*unit, 1.5*unit]))
-   b08 = BoundingBox(np.array([-4.5*unit, 2.5*unit]),np.array([ 6.5*unit, 1.5*unit]))
+   loops = [
+            [
+               #J
+               (12,119),
+               (25,105),
+               (28,112),
+               (34,116),
+               (41,114),
+               (44,108),
+               (44,31),
+               (59,16),
+               (59,111),
+               (36,135),
+               (27,133),
+               (19,129)
+            ],
+            [
+               #E
+               (70,104),
+               (70,16),
+               (115,16),
+               (115,32),
+               (85,32),
+               (85,51),
+               (108,51),
+               (108,69),
+               (85,69),
+               (85,88),
+               (115,88),
+               (115,104)
+            ],
+            [
+               #N
+               (125,144),
+               (125,16),
+               (144,16),
+               (183,80),
+               (183,16),
+               (201,17),
+               (201,108),
+               (183,108),
+               (144,45),
+               (144,113)
+            ],
+            [
+               #S
+               (213,131),
+               (213,109),
+               (251,72),
+               (213,72),
+               (213,16),
+               (276,16),
+               (276,32),
+               (230,32),
+               (230,55),
+               (276,55),
+               (276,72)
+            ],
+            [
+               #E
+               (48,207),
+               (48,134),
+               (70,113),
+               (115,113),
+               (115,129),
+               (64,129),
+               (64,148),
+               (87,148),
+               (87,164),
+               (64,164),
+               (64,191),
+               (108,191),
+               (99,207)
+            ],
+            [
+               #A
+               (109,207),
+               (155,113),
+               (175,113),
+               (213,207),
+               (193,207),
+               (164,138),
+               (139,191),
+               (178,191),
+               (185,207)
+            ],
+            [
+               #S
+               (222,207),
+               (216,191),
+               (260,191),
+               (260,167),
+               (213,167),
+               (213,151),
+               (276,92),
+               (276,113),
+               (237,151),
+               (276,151),
+               (276,207)
+            ],
+            [
+               #T
+               (297,207),
+               (297,129),
+               (272,129),
+               (288,113),
+               (339,113),
+               (339,129),
+               (314,129),
+               (314,207)
+            ]
+           ]
+   width = 349
+   height = 218
+   scale = 1
 
-   b09 = BoundingBox(np.array([-6.5*unit,-1.5*unit]),np.array([ 4.5*unit,-2.5*unit]))
-   b10 = BoundingBox(np.array([ 3.5*unit,-1.5*unit]),np.array([ 4.5*unit,-4.5*unit]))
-   b11 = BoundingBox(np.array([-6.5*unit,-3.5*unit]),np.array([ 4.5*unit,-4.5*unit]))
-   line_segments = [b01,b02,b03,b04,b05,b06,b07,b08,b09,b10,b11]
+   line_segments = []
+   outer_bound = 2 #1 is our target min/max but (1,1) is further out than that when rotated 45deg
+   line_segments.append(BoundingBox(np.array([-outer_bound,outer_bound]),np.array([outer_bound,0.4*scale])))
+   line_segments.append(BoundingBox(np.array([-outer_bound,outer_bound]),np.array([-0.5*scale,-outer_bound])))
+   line_segments.append(BoundingBox(np.array([-outer_bound,-0.4*scale]),np.array([outer_bound,-outer_bound])))
+   line_segments.append(BoundingBox(np.array([0.5*scale,outer_bound]),np.array([outer_bound,-outer_bound])))
+   for loop in loops:
+      for i in range(0,len(loop)-1):
+         p0 = np.array(loop[i])
+         p1 = np.array(loop[i+1])
+         #fix scale/direction
+         p0 = np.array([p0[0]-(width/2),(height/2)-p0[1]])
+         p0 = p0/width*scale
+         p1 = np.array([p1[0]-(width/2),(height/2)-p1[1]])
+         p1 = p1/width*scale
+         #create segment
+         ls = LineSegment(p0,p1)
+         line_segments.append(ls)
+      # one last line segment between first and last
+      p0 = np.array(loop[-1])
+      p1 = np.array(loop[0])
+      #fix scale/direction
+      p0 = np.array([p0[0]-(width/2),(height/2)-p0[1]])
+      p0 = p0/width*scale
+      p1 = np.array([p1[0]-(width/2),(height/2)-p1[1]])
+      p1 = p1/width*scale
+      #create segment
+      ls = LineSegment(p0,p1)
+      line_segments.append(ls)
 
-   b12 = BoundingBox(np.array([-1.0     , 1.0     ]),np.array([-7.5*unit, -1.0    ]))
-   b13 = BoundingBox(np.array([-1.0     , 1.0     ]),np.array([ 1.0     , 7.5*unit]))
-   b14 = BoundingBox(np.array([-1.0     ,-7.5*unit]),np.array([ 1.0     ,-1.0     ]))
-   b15 = BoundingBox(np.array([ 7.5*unit, 1.0     ]),np.array([ 1.0     ,-1.0     ]))
-   line_segments.append(b12)
-   line_segments.append(b13)
-   line_segments.append(b14)
-   line_segments.append(b15)
+   #PlotRenderPreview(line_segments,0.02)
+   #exit(1)
 
    # Generate a random waveform
    fs_hz = 41000
@@ -167,14 +324,19 @@ def main():
    # Read in a real file
    fs_hz,data = wf.read('Bumy Goldson - Everyday Another Song.wav')
    fs_hz,data = wf.read('Silva_Addict_VIP_Club.wav')
+   fs_hz,data = wf.read('Jens East - Galaxies (ft. Diandra Faye).wav')
    raw = data.astype(np.double) / np.iinfo(np.int16).max
 
    # Only use the first 5 seconds
    #raw = raw[0:fs_hz*5,:]
    #raw = raw[int(fs_hz*(3*60+51.5)):fs_hz*(4*60+25)]
+   #raw = raw[int(fs_hz*(25.5)):int(fs_hz*(30.5))]
 
-   print('input mins:({},{}), maxs:({},{})'.format(np.amin(raw[:,0]),np.amin(raw[:,1]),
-                                                   np.amax(raw[:,0]),np.amax(raw[:,1])))
+   mins = [np.amin(raw[:,0]),np.amin(raw[:,1])]
+   maxs = [np.amax(raw[:,0]),np.amax(raw[:,1])]
+
+   print('input mins:({},{}), maxs:({},{})'.format(mins[0],mins[1],
+                                                   maxs[0],maxs[1]))
 
    # Since most audio files will have highly-correlated left and right,
    # apply a slow rotation to the audio
@@ -189,6 +351,10 @@ def main():
 
    # Distort the waveform
    distorted = MapValuesToClosestValid(line_segments,raw_spin)
+   noclip_scale = np.amax(distorted)
+   if(noclip_scale > 1):
+      print('scaling by {} to avoid clipping'.format(1/noclip_scale))
+      distorted = distorted/noclip_scale
    print('output mins:({},{}), maxs:({},{})'.format(np.amin(distorted[:,0]),np.amin(distorted[:,1]),
                                                     np.amax(distorted[:,0]),np.amax(distorted[:,1])))
 
