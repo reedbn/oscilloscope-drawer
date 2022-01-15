@@ -5,6 +5,10 @@ as images on an XY-mode oscilloscope. It is not fast, not
 pretty (code), and not user-friendly, but good enough for what
 I wanted to do with it.
 
+# Example Output
+Jens East - Galaxies: [YouTube](https://youtu.be/yvlaeIdA-zg) [SoundCloud](https://soundcloud.com/greenkid336600/jens-east-galaxies-render-2)
+
+
 # Background
 Ever since I saw the [YouScope demo](https://www.youtube.com/watch?v=s1eNjUgaB-g),
 I've been intrigued by audio-generated images. Whereas the soundtrack to the
