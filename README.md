@@ -3,7 +3,9 @@ This program is a very hacky, very unpolished proof-of-concept
 script that distorts stereo audio files so that they render
 as images on an XY-mode oscilloscope. It is not fast, not
 pretty (code), and not user-friendly, but good enough for what
-I wanted to do with it.
+I wanted to do with it. Specifically, I can take any song
+or audio track, and turn it into a form of oscilloscope music,
+drawing a picture of my choice with sound.
 
 # Example Output
 Jens East - Galaxies: [YouTube](https://youtu.be/yvlaeIdA-zg) [SoundCloud](https://soundcloud.com/greenkid336600/jens-east-galaxies-render-2)
